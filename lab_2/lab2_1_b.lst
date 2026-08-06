@@ -1,0 +1,170 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;b.When the source and destination blocks are overlappin
+                       g
+    2 00000000                 AREA             RESET,DATA,READONLY
+    3 00000000                 EXPORT           __Vectors
+    4 00000000         
+    5 00000000         __Vectors
+    6 00000000 10001000        DCD              0x10001000  ;STACK POINTER VALU
+                                                            E WHEN STACK IS EMP
+                                                            TY
+    7 00000004 00000000        DCD              Reset_Handler ;reset vector
+    8 00000008         
+    9 00000008                 ALIGN
+   10 00000008         
+   11 00000008                 AREA             mycode,CODE,READONLY
+   12 00000000                 ENTRY
+   13 00000000                 EXPORT           Reset_Handler
+   14 00000000         
+   15 00000000         Reset_Handler
+   16 00000000 4811            LDR              R0, =src1
+   17 00000002 F100 0024       ADD              R0,R0, #36
+   18 00000006         
+   19 00000006 4911            LDR              R1, =dst
+   20 00000008 F101 0124       ADD              R1,R1, #36
+   21 0000000C F04F 020A       MOV              R2, #10
+   22 00000010         
+   23 00000010 F850 3904 
+                       L1      LDR              R3, [R0], #-4
+   24 00000014 F841 3904       STR              R3, [R1], #-4
+   25 00000018 1E52            SUBS             R2, R2, #1
+   26 0000001A D1F9            BNE              L1
+   27 0000001C         
+   28 0000001C         
+   29 0000001C E7FE    stop    B                stop
+   30 0000001E 00 00 20100123 
+              70023021 
+              21345678 
+              11111111 
+              22222222 src1    DCD              0x20100123, 0x70023021, 0x21345
+678, 0x11111111, 0x22222222
+   31 00000034 AAAAAAAA 
+              33333333 
+              88888888 
+              99999999 
+              44444444         DCD              0xAAAAAAAA, 0x33333333, 0x88888
+888, 0x99999999, 0x44444444
+   32 00000048         
+   33 00000048 00000000 
+              00000000         area             dataseg , data,READWRITE
+   34 00000000 00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 dst     DCD              0,0,0,0,0,0,0,0,0,0
+   35 00000028         
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   36 00000028                 END
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=lab2_1_b
+.d -olab2_1_b.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\AR
+M\Inc\NXP\LPC17xx --predefine="__EVAL SETA 1" --list=lab2_1_b.lst lab2_1_b.asm
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 2 in file lab2_1_b.asm
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 5 in file lab2_1_b.asm
+   Uses
+      At line 3 in file lab2_1_b.asm
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+L1 00000010
+
+Symbol: L1
+   Definitions
+      At line 23 in file lab2_1_b.asm
+   Uses
+      At line 26 in file lab2_1_b.asm
+Comment: L1 used once
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 15 in file lab2_1_b.asm
+   Uses
+      At line 7 in file lab2_1_b.asm
+      At line 13 in file lab2_1_b.asm
+
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 11 in file lab2_1_b.asm
+   Uses
+      None
+Comment: mycode unused
+src1 00000020
+
+Symbol: src1
+   Definitions
+      At line 30 in file lab2_1_b.asm
+   Uses
+      At line 16 in file lab2_1_b.asm
+Comment: src1 used once
+stop 0000001C
+
+Symbol: stop
+   Definitions
+      At line 29 in file lab2_1_b.asm
+   Uses
+      At line 29 in file lab2_1_b.asm
+Comment: stop used once
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+dataseg 00000000
+
+Symbol: dataseg
+   Definitions
+      At line 33 in file lab2_1_b.asm
+   Uses
+      None
+Comment: dataseg unused
+dst 00000000
+
+Symbol: dst
+   Definitions
+      At line 34 in file lab2_1_b.asm
+   Uses
+      At line 19 in file lab2_1_b.asm
+Comment: dst used once
+2 symbols
+342 symbols in table
