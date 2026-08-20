@@ -1,0 +1,188 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; PROGRAM TO ADD TEN 32-BIT NUMBERS FROM CODE SEGMENT AN
+                       D STORE IN DATA SEGMENT
+    2 00000000         
+    3 00000000                 AREA             RESET, DATA, READONLY
+    4 00000000                 EXPORT           __Vectors
+    5 00000000         
+    6 00000000         __Vectors
+    7 00000000 10001000        DCD              0x10001000  ; Stack Pointer val
+                                                            ue when stack is em
+                                                            pty
+    8 00000004 00000000        DCD              Reset_Handler ; Reset vector po
+                                                            ints to Reset_Handl
+                                                            er
+    9 00000008         
+   10 00000008                 ALIGN
+   11 00000008         
+   12 00000008                 AREA             mycode, CODE, READONLY
+   13 00000000                 ENTRY
+   14 00000000                 EXPORT           Reset_Handler
+   15 00000000         
+   16 00000000         Reset_Handler
+   17 00000000 4810            LDR              R0, =NUMBERS ; R0 = Pointer to 
+                                                            array in code segme
+                                                            nt
+   18 00000002 F04F 010A       MOV              R1, #10     ; R1 = Loop counter
+                                                             (10 numbers)
+   19 00000006 F04F 0200       MOV              R2, #0      ; R2 = Accumulator 
+                                                            for the sum (initia
+                                                            lized to 0)
+   20 0000000A         
+   21 0000000A         LOOP
+   22 0000000A F850 3B04       LDR              R3, [R0], #4 ; Load 32-bit numb
+                                                            er from [R0] into R
+                                                            3, post-increment R
+                                                            0 by 4 bytes
+   23 0000000E 441A            ADD              R2, R2, R3  ; Accumulate: R2 = 
+                                                            R2 + R3
+   24 00000010 1E49            SUBS             R1, R1, #1  ; Decrement counter
+                                                             and set Zero flag
+   25 00000012 D1FA            BNE              LOOP        ; Repeat loop until
+                                                             R1 == 0
+   26 00000014         
+   27 00000014 4C0C            LDR              R4, =SUM    ; R4 = Pointer to S
+                                                            UM in data segment
+   28 00000016 6022            STR              R2, [R4]    ; Store the total s
+                                                            um into memory loca
+                                                            tion SUM
+   29 00000018         
+   30 00000018         STOP
+   31 00000018 E7FE            B                STOP        ; Infinite loop to 
+                                                            end execution
+   32 0000001A         
+   33 0000001A 00 00           ALIGN                        ; Ensures 4-byte al
+                                                            ignment for the arr
+                                                            ay
+   34 0000001C         NUMBERS
+   35 0000001C 0000000A 
+              00000014 
+              0000001E 
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+              00000028 
+              00000032 
+              0000003C 
+              00000046 
+              00000050 
+              0000005A 
+              00000064         DCD              0x0000000A, 0x00000014, 0x00000
+01E, 0x00000028, 0x00000032, 0x0000003C, 0x00000046, 0x00000050, 0x0000005A, 0x
+00000064
+   36 00000044         ;10,20,30,40,50,60,70,80,90,100
+   37 00000044 00000000 
+              00000000         AREA             mydata, DATA, READWRITE
+   38 00000000                 ALIGN
+   39 00000000 00000000 
+                       SUM     DCD              0           ; Reserve 4 bytes i
+                                                            n RAM to store the 
+                                                            final result
+   40 00000004         
+   41 00000004                 END
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=lab_3_1.
+d -olab_3_1.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\
+Inc\NXP\LPC17xx --predefine="__EVAL SETA 1" --list=lab_3_1.lst lab_3_1.asm
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 3 in file lab_3_1.asm
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 6 in file lab_3_1.asm
+   Uses
+      At line 4 in file lab_3_1.asm
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+LOOP 0000000A
+
+Symbol: LOOP
+   Definitions
+      At line 21 in file lab_3_1.asm
+   Uses
+      At line 25 in file lab_3_1.asm
+Comment: LOOP used once
+NUMBERS 0000001C
+
+Symbol: NUMBERS
+   Definitions
+      At line 34 in file lab_3_1.asm
+   Uses
+      At line 17 in file lab_3_1.asm
+Comment: NUMBERS used once
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 16 in file lab_3_1.asm
+   Uses
+      At line 8 in file lab_3_1.asm
+      At line 14 in file lab_3_1.asm
+
+STOP 00000018
+
+Symbol: STOP
+   Definitions
+      At line 30 in file lab_3_1.asm
+   Uses
+      At line 31 in file lab_3_1.asm
+Comment: STOP used once
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 12 in file lab_3_1.asm
+   Uses
+      None
+Comment: mycode unused
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+SUM 00000000
+
+Symbol: SUM
+   Definitions
+      At line 39 in file lab_3_1.asm
+   Uses
+      At line 27 in file lab_3_1.asm
+Comment: SUM used once
+mydata 00000000
+
+Symbol: mydata
+   Definitions
+      At line 37 in file lab_3_1.asm
+   Uses
+      None
+Comment: mydata unused
+2 symbols
+342 symbols in table

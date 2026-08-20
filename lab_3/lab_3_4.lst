@@ -1,0 +1,207 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; PROGRAM TO FIND LCM OF TWO 32-BIT NUMBERS USING RESET_
+                       HANDLER
+    2 00000000         
+    3 00000000                 AREA             RESET, DATA, READONLY
+    4 00000000                 EXPORT           __Vectors
+    5 00000000         
+    6 00000000         __Vectors
+    7 00000000 10001000        DCD              0x10001000  ; Initial Stack Poi
+                                                            nter value
+    8 00000004 00000000        DCD              Reset_Handler ; Reset vector po
+                                                            ints to Reset_Handl
+                                                            er
+    9 00000008         
+   10 00000008                 ALIGN
+   11 00000008         
+   12 00000008                 AREA             mycode, CODE, READONLY
+   13 00000000                 ENTRY
+   14 00000000                 EXPORT           Reset_Handler
+   15 00000000         
+   16 00000000         Reset_Handler                        ; Entry point match
+                                                            es vector table
+   17 00000000 480C            LDR              R0, =NUM_A  ; Pointer to NUM_A
+   18 00000002 6801            LDR              R1, [R0]    ; R1 = a (First num
+                                                            ber)
+   19 00000004         
+   20 00000004 480C            LDR              R0, =NUM_B  ; Pointer to NUM_B
+   21 00000006 6802            LDR              R2, [R0]    ; R2 = b (Second nu
+                                                            mber)
+   22 00000008         
+   23 00000008 F04F 0301       MOV              R3, #1      ; R3 = i (multiplie
+                                                            r, initialized to 1
+                                                            )
+   24 0000000C         
+   25 0000000C         LCM_LOOP
+   26 0000000C FB03 F401       MUL              R4, R3, R1  ; R4 = i * a (candi
+                                                            date LCM value)
+   27 00000010         
+   28 00000010         ; --- Compute Remainder: R5 = (i * a) mod b ---
+   29 00000010 FBB4 F5F2       UDIV             R5, R4, R2  ; R5 = (i * a) / b 
+                                                             [Quotient]
+   30 00000014 FB05 F602       MUL              R6, R5, R2  ; R6 = Quotient * b
+                                                            
+   31 00000018 EBA4 0506       SUB              R5, R4, R6  ; R5 = (i * a) - (Q
+                                                            uotient * b)  [Rema
+                                                            inder]
+   32 0000001C         
+   33 0000001C 2D00            CMP              R5, #0      ; Check if remainde
+                                                            r == 0
+   34 0000001E D002            BEQ              LCM_FOUND   ; If remainder == 0
+                                                            , exit loop!
+   35 00000020         
+   36 00000020 F103 0301       ADD              R3, R3, #1  ; Else i++
+   37 00000024 E7F2            B                LCM_LOOP    ; Repeat loop
+   38 00000026         
+   39 00000026         LCM_FOUND
+   40 00000026 4805            LDR              R0, =LCM_RESULT ; Pointer to LC
+                                                            M_RESULT in RAM
+   41 00000028 6004            STR              R4, [R0]    ; Store final LCM i
+                                                            nto memory
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   42 0000002A         
+   43 0000002A E7FE    STOP    B                STOP        ; Infinite loop to 
+                                                            end execution
+   44 0000002C         
+   45 0000002C                 ALIGN
+   46 0000002C 0000000C 
+                       NUM_A   DCD              12          ; First number  (a 
+                                                            = 12)
+   47 00000030 0000000F 
+                       NUM_B   DCD              15          ; Second number (b 
+                                                            = 15)
+   48 00000034         
+   49 00000034 00000000 
+              00000000 
+              00000000         AREA             mydata, DATA, READWRITE
+   50 00000000                 ALIGN
+   51 00000000 00000000 
+                       LCM_RESULT
+                               DCD              0           ; Space in RAM to s
+                                                            tore final LCM
+   52 00000004         
+   53 00000004                 END
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=lab_3_4.
+d -olab_3_4.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\
+Inc\NXP\LPC17xx --predefine="__EVAL SETA 1" --list=lab_3_4.lst lab_3_4.asm
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 3 in file lab_3_4.asm
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 6 in file lab_3_4.asm
+   Uses
+      At line 4 in file lab_3_4.asm
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+LCM_FOUND 00000026
+
+Symbol: LCM_FOUND
+   Definitions
+      At line 39 in file lab_3_4.asm
+   Uses
+      At line 34 in file lab_3_4.asm
+Comment: LCM_FOUND used once
+LCM_LOOP 0000000C
+
+Symbol: LCM_LOOP
+   Definitions
+      At line 25 in file lab_3_4.asm
+   Uses
+      At line 37 in file lab_3_4.asm
+Comment: LCM_LOOP used once
+NUM_A 0000002C
+
+Symbol: NUM_A
+   Definitions
+      At line 46 in file lab_3_4.asm
+   Uses
+      At line 17 in file lab_3_4.asm
+Comment: NUM_A used once
+NUM_B 00000030
+
+Symbol: NUM_B
+   Definitions
+      At line 47 in file lab_3_4.asm
+   Uses
+      At line 20 in file lab_3_4.asm
+Comment: NUM_B used once
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 16 in file lab_3_4.asm
+   Uses
+      At line 8 in file lab_3_4.asm
+      At line 14 in file lab_3_4.asm
+
+STOP 0000002A
+
+Symbol: STOP
+   Definitions
+      At line 43 in file lab_3_4.asm
+   Uses
+      At line 43 in file lab_3_4.asm
+Comment: STOP used once
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 12 in file lab_3_4.asm
+   Uses
+      None
+Comment: mycode unused
+7 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+LCM_RESULT 00000000
+
+Symbol: LCM_RESULT
+   Definitions
+      At line 51 in file lab_3_4.asm
+   Uses
+      At line 40 in file lab_3_4.asm
+Comment: LCM_RESULT used once
+mydata 00000000
+
+Symbol: mydata
+   Definitions
+      At line 49 in file lab_3_4.asm
+   Uses
+      None
+Comment: mydata unused
+2 symbols
+344 symbols in table
