@@ -1,0 +1,143 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; PROGRAM TO CONVERT 2-DIGIT BCD TO EQUIVALENT HEXADECIM
+                       AL
+    2 00000000         ; INPUT:  0x25 (BCD representation of decimal 25)
+    3 00000000         ; OUTPUT: 0x00000019 (25 in Hexadecimal)
+    4 00000000         
+    5 00000000                 AREA             RESET, DATA, READONLY
+    6 00000000                 EXPORT           __Vectors
+    7 00000000         
+    8 00000000         __Vectors
+    9 00000000 10001000        DCD              0x10001000  ; Initial Stack Poi
+                                                            nter
+   10 00000004 00000000        DCD              Reset_Handler ; Reset Vector
+   11 00000008         
+   12 00000008                 ALIGN
+   13 00000008         
+   14 00000008                 AREA             mycode, CODE, READONLY
+   15 00000000                 ENTRY
+   16 00000000                 EXPORT           Reset_Handler
+   17 00000000         
+   18 00000000         Reset_Handler
+   19 00000000 4808            LDR              R0, =BCD_NUM
+   20 00000002 7801            LDRB             R1, [R0]
+   21 00000004         
+   22 00000004         
+   23 00000004 EA4F 1211       LSR              R2, R1, #4
+   24 00000008 F04F 030A       MOV              R3, #10
+   25 0000000C FB02 F203       MUL              R2, R2, R3
+   26 00000010         
+   27 00000010 F001 030F       AND              R3, R1, #0x0F
+   28 00000014 EB02 0403       ADD              R4, R2, R3
+   29 00000018         
+   30 00000018 4803            LDR              R0, =RESULT
+   31 0000001A 7004            STRB             R4, [R0]    ; Store 8-bit hex r
+                                                            esult into RAM
+   32 0000001C         
+   33 0000001C E7FE    STOP    B                STOP
+   34 0000001E         
+   35 0000001E 00 00           ALIGN
+   36 00000020 00000025 
+                       BCD_NUM DCD              0x25
+   37 00000024         
+   38 00000024 00000000 
+              00000000         AREA             mydata, DATA, READWRITE
+   39 00000000                 ALIGN
+   40 00000000 00      RESULT  DCB              0
+   41 00000001         
+   42 00000001                 END
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=lab_4_2.
+d -olab_4_2.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\
+Inc\NXP\LPC17xx --predefine="__EVAL SETA 1" --list=lab_4_2.lst lab_4_2.asm
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 5 in file lab_4_2.asm
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 8 in file lab_4_2.asm
+   Uses
+      At line 6 in file lab_4_2.asm
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+BCD_NUM 00000020
+
+Symbol: BCD_NUM
+   Definitions
+      At line 36 in file lab_4_2.asm
+   Uses
+      At line 19 in file lab_4_2.asm
+Comment: BCD_NUM used once
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 18 in file lab_4_2.asm
+   Uses
+      At line 10 in file lab_4_2.asm
+      At line 16 in file lab_4_2.asm
+
+STOP 0000001C
+
+Symbol: STOP
+   Definitions
+      At line 33 in file lab_4_2.asm
+   Uses
+      At line 33 in file lab_4_2.asm
+Comment: STOP used once
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 14 in file lab_4_2.asm
+   Uses
+      None
+Comment: mycode unused
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESULT 00000000
+
+Symbol: RESULT
+   Definitions
+      At line 40 in file lab_4_2.asm
+   Uses
+      At line 30 in file lab_4_2.asm
+Comment: RESULT used once
+mydata 00000000
+
+Symbol: mydata
+   Definitions
+      At line 38 in file lab_4_2.asm
+   Uses
+      None
+Comment: mydata unused
+2 symbols
+341 symbols in table

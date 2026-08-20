@@ -1,0 +1,142 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; PROGRAM TO CONVERT A 2-DIGIT HEX NUMBER TO ASCII
+    2 00000000         ; INPUT:  0x21
+    3 00000000         ; OUTPUT: 0x3231 ('2' -> 0x32, '1' -> 0x31)
+    4 00000000         
+    5 00000000                 AREA             RESET, DATA, READONLY
+    6 00000000                 EXPORT           __Vectors
+    7 00000000         
+    8 00000000         __Vectors
+    9 00000000 10001000        DCD              0x10001000  ; Initial Stack Poi
+                                                            nter value
+   10 00000004 00000000        DCD              Reset_Handler ; Reset Vector
+   11 00000008         
+   12 00000008                 ALIGN
+   13 00000008         
+   14 00000008                 AREA             mycode, CODE, READONLY
+   15 00000000                 ENTRY
+   16 00000000                 EXPORT           Reset_Handler
+   17 00000000         
+   18 00000000         Reset_Handler
+   19 00000000 4809            LDR              R0, =HEX_NUM
+   20 00000002 7801            LDRB             R1, [R0]
+   21 00000004 EA4F 1211       LSR              R2, R1, #4
+   22 00000008 F102 0230       ADD              R2, R2, #0x30
+   23 0000000C         
+   24 0000000C F001 030F       AND              R3, R1, #0x0F ;(R3 = 0x01)
+   25 00000010 F103 0330       ADD              R3, R3, #0x30
+   26 00000014         
+   27 00000014 EA4F 2202       LSL              R2, R2, #8  ;(R2 = 0x3200)
+   28 00000018 EA42 0403       ORR              R4, R2, R3  ;(R4 = 0x3231)
+   29 0000001C         
+   30 0000001C 4803            LDR              R0, =ASCII_OUT
+   31 0000001E 8004            STRH             R4, [R0]
+   32 00000020         
+   33 00000020 E7FE    STOP    B                STOP
+   34 00000022         
+   35 00000022 00 00           ALIGN
+   36 00000024 00000021 
+                       HEX_NUM DCD              0x21
+   37 00000028         
+   38 00000028 00000000 
+              00000000         AREA             mydata, DATA, READWRITE
+   39 00000000                 ALIGN
+   40 00000000 00 00   ASCII_OUT
+                               DCW              0
+   41 00000002         
+   42 00000002                 END
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=lab_4_1.
+d -olab_4_1.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\
+Inc\NXP\LPC17xx --predefine="__EVAL SETA 1" --list=lab_4_1.lst lab_4_1.asm
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 5 in file lab_4_1.asm
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 8 in file lab_4_1.asm
+   Uses
+      At line 6 in file lab_4_1.asm
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+HEX_NUM 00000024
+
+Symbol: HEX_NUM
+   Definitions
+      At line 36 in file lab_4_1.asm
+   Uses
+      At line 19 in file lab_4_1.asm
+Comment: HEX_NUM used once
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 18 in file lab_4_1.asm
+   Uses
+      At line 10 in file lab_4_1.asm
+      At line 16 in file lab_4_1.asm
+
+STOP 00000020
+
+Symbol: STOP
+   Definitions
+      At line 33 in file lab_4_1.asm
+   Uses
+      At line 33 in file lab_4_1.asm
+Comment: STOP used once
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 14 in file lab_4_1.asm
+   Uses
+      None
+Comment: mycode unused
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+ASCII_OUT 00000000
+
+Symbol: ASCII_OUT
+   Definitions
+      At line 40 in file lab_4_1.asm
+   Uses
+      At line 30 in file lab_4_1.asm
+Comment: ASCII_OUT used once
+mydata 00000000
+
+Symbol: mydata
+   Definitions
+      At line 38 in file lab_4_1.asm
+   Uses
+      None
+Comment: mydata unused
+2 symbols
+341 symbols in table

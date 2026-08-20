@@ -1,0 +1,143 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; PROGRAM TO CONVERT A 2-DIGIT HEX NUMBER TO PACKED BCD
+    2 00000000         ; INPUT:  0x19 (25 in decimal)
+    3 00000000         ; OUTPUT: 0x25 (Packed BCD)
+    4 00000000         
+    5 00000000                 AREA             RESET, DATA, READONLY
+    6 00000000                 EXPORT           __Vectors
+    7 00000000         
+    8 00000000         __Vectors
+    9 00000000 10001000        DCD              0x10001000  ; Initial Stack Poi
+                                                            nter
+   10 00000004 00000000        DCD              Reset_Handler ; Reset Vector
+   11 00000008         
+   12 00000008                 ALIGN
+   13 00000008         
+   14 00000008                 AREA             mycode, CODE, READONLY
+   15 00000000                 ENTRY
+   16 00000000                 EXPORT           Reset_Handler
+   17 00000000         
+   18 00000000         Reset_Handler
+   19 00000000 4809            LDR              R0, =HEX_NUM
+   20 00000002 7801            LDRB             R1, [R0]
+   21 00000004         
+   22 00000004 F04F 020A       MOV              R2, #10
+   23 00000008         
+   24 00000008 FBB1 F3F2       UDIV             R3, R1, R2  ; R3 = 25/10 =2 
+   25 0000000C         
+   26 0000000C FB03 F402       MUL              R4, R3, R2  ; R4 = 2*10 = 20
+   27 00000010 EBA1 0504       SUB              R5, R1, R4  ; R5 = 25-20 = 5 
+   28 00000014         
+   29 00000014 EA4F 1303       LSL              R3, R3, #4
+   30 00000018 EA43 0605       ORR              R6, R3, R5
+   31 0000001C         
+   32 0000001C 4803            LDR              R0, =BCD_OUT
+   33 0000001E 7006            STRB             R6, [R0]
+   34 00000020         
+   35 00000020 E7FE    STOP    B                STOP
+   36 00000022         
+   37 00000022 00 00           ALIGN
+   38 00000024 00000019 
+                       HEX_NUM DCD              0x19
+   39 00000028         
+   40 00000028 00000000 
+              00000000         AREA             mydata, DATA, READWRITE
+   41 00000000                 ALIGN
+   42 00000000 00      BCD_OUT DCB              0
+   43 00000001         
+   44 00000001                 END
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=lab_4_3.
+d -olab_4_3.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\
+Inc\NXP\LPC17xx --predefine="__EVAL SETA 1" --list=lab_4_3.lst lab_4_3.asm
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 5 in file lab_4_3.asm
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 8 in file lab_4_3.asm
+   Uses
+      At line 6 in file lab_4_3.asm
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+HEX_NUM 00000024
+
+Symbol: HEX_NUM
+   Definitions
+      At line 38 in file lab_4_3.asm
+   Uses
+      At line 19 in file lab_4_3.asm
+Comment: HEX_NUM used once
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 18 in file lab_4_3.asm
+   Uses
+      At line 10 in file lab_4_3.asm
+      At line 16 in file lab_4_3.asm
+
+STOP 00000020
+
+Symbol: STOP
+   Definitions
+      At line 35 in file lab_4_3.asm
+   Uses
+      At line 35 in file lab_4_3.asm
+Comment: STOP used once
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 14 in file lab_4_3.asm
+   Uses
+      None
+Comment: mycode unused
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+BCD_OUT 00000000
+
+Symbol: BCD_OUT
+   Definitions
+      At line 42 in file lab_4_3.asm
+   Uses
+      At line 32 in file lab_4_3.asm
+Comment: BCD_OUT used once
+mydata 00000000
+
+Symbol: mydata
+   Definitions
+      At line 40 in file lab_4_3.asm
+   Uses
+      None
+Comment: mydata unused
+2 symbols
+341 symbols in table
