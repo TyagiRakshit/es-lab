@@ -1,0 +1,332 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;Write an assembly program to sort an array using select
+                       ion sort
+    2 00000000         ; PROGRAM TO SORT AN ARRAY OF TEN 32-BIT NUMBERS USING S
+                       ELECTION SORT
+    3 00000000         ; ARRAY IS SORTED IN-PLACE IN ASCENDING ORDER IN DATA SE
+                       GMENT (RAM)
+    4 00000000         
+    5 00000000                 AREA             RESET, DATA, READONLY
+    6 00000000                 EXPORT           __Vectors
+    7 00000000         
+    8 00000000         __Vectors
+    9 00000000 10001000        DCD              0x10001000  ; Stack Pointer ini
+                                                            tial value (Top of 
+                                                            SRAM)
+   10 00000004 00000000        DCD              Reset_Handler ; Reset Vector po
+                                                            inting to execution
+                                                             entry point
+   11 00000008         
+   12 00000008                 ALIGN
+   13 00000008         
+   14 00000008                 AREA             mycode, CODE, READONLY
+   15 00000000                 ENTRY
+   16 00000000                 EXPORT           Reset_Handler
+   17 00000000         
+   18 00000000         Reset_Handler
+   19 00000000         ; --- Step 1: Copy Input Array from FLASH (CODE) to RAM 
+                       (DATA) ---
+   20 00000000 4820            LDR              R0, =SRC_ARRAY
+   21 00000002 4921            LDR              R1, =ARR_RAM
+   22 00000004 F04F 020A       MOV              R2, #10
+   23 00000008         
+   24 00000008         COPY_LOOP
+   25 00000008 F850 3B04       LDR              R3, [R0], #4 ; Load word from c
+                                                            ode, increment poin
+                                                            ter
+   26 0000000C F841 3B04       STR              R3, [R1], #4 ; Store word into 
+                                                            RAM, increment poin
+                                                            ter
+   27 00000010 1E52            SUBS             R2, R2, #1  ; Decrement counter
+                                                            
+   28 00000012 D1F9            BNE              COPY_LOOP
+   29 00000014         
+   30 00000014         ; --- Step 2: Initialize Selection Sort Parameters ---
+   31 00000014 481C            LDR              R0, =ARR_RAM ; Base address of 
+                                                            RAM array (i = 0 po
+                                                            inter)
+   32 00000016 F04F 0100       MOV              R1, #0      ; Outer loop index 
+                                                            i = 0
+   33 0000001A         
+   34 0000001A         OUTER_LOOP
+   35 0000001A 2909            CMP              R1, #9      ; Outer loop runs f
+                                                            or i = 0 to 8 (N-1 
+                                                            passes)
+   36 0000001C DA1D            BGE              SORT_DONE   ; If i >= 9, 
+   37 0000001E         ;sorting done
+   38 0000001E         
+   39 0000001E F101 0201       ADD              R2, R1, #1  ; Inner loop index 
+                                                            j = i + 1
+   40 00000022 460B            MOV              R3, R1      ; R3 stores index o
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                                                            f minimum element (
+                                                            min_idx = i)
+   41 00000024         
+   42 00000024         INNER_LOOP
+   43 00000024 2A0A            CMP              R2, #10     ; Check if j == 10 
+                                                            (end of array)
+   44 00000026 DA0B            BGE              SWAP_STAGE  ; If j >= 10, inner
+                                                             loop finished -> s
+                                                            wap
+   45 00000028         
+   46 00000028         ; Compare ARR[j] and ARR[min_idx]
+   47 00000028 EB00 0482       ADD              R4, R0, R2, LSL #2 ; R4 = &ARR[
+                                                            j]  (Base + j * 4)
+   48 0000002C 6825            LDR              R5, [R4]    ; R5 = ARR[j]
+   49 0000002E         
+   50 0000002E EB00 0683       ADD              R6, R0, R3, LSL #2 ; R6 = &ARR[
+                                                            min_idx] (Base + mi
+                                                            n_idx * 4)
+   51 00000032 6837            LDR              R7, [R6]    ; R7 = ARR[min_idx]
+                                                            
+   52 00000034         
+   53 00000034 42BD            CMP              R5, R7      ; Compare ARR[j] wi
+                                                            th ARR[min_idx]
+   54 00000036 D200            BHS              NEXT_INNER  ; If ARR[j] >= ARR[
+                                                            min_idx], skip upda
+                                                            te
+   55 00000038         
+   56 00000038 4613            MOV              R3, R2      ; Else update min_i
+                                                            dx: min_idx = j
+   57 0000003A         
+   58 0000003A         NEXT_INNER
+   59 0000003A F102 0201       ADD              R2, R2, #1  ; j++
+   60 0000003E E7F1            B                INNER_LOOP
+   61 00000040         
+   62 00000040         SWAP_STAGE
+   63 00000040         ; Swap ARR[i] and ARR[min_idx]
+   64 00000040 428B            CMP              R3, R1      ; Check if min_idx 
+                                                            == i
+   65 00000042 D007            BEQ              NEXT_OUTER  ; If min_idx == i, 
+                                                            no swap needed
+   66 00000044         
+   67 00000044 EB00 0481       ADD              R4, R0, R1, LSL #2 
+                                                            ; R4 = &ARR[i]
+   68 00000048 6825            LDR              R5, [R4]    ; R5 = ARR[i]
+   69 0000004A         
+   70 0000004A EB00 0683       ADD              R6, R0, R3, LSL #2 ; R6 = &ARR[
+                                                            min_idx]
+   71 0000004E 6837            LDR              R7, [R6]    ; R7 = ARR[min_idx]
+                                                            
+   72 00000050         
+   73 00000050 6027            STR              R7, [R4]    ; ARR[i] = ARR[min_
+                                                            idx]
+   74 00000052 6035            STR              R5, [R6]    ; ARR[min_idx] = AR
+                                                            R[i]
+   75 00000054         
+   76 00000054         NEXT_OUTER
+   77 00000054 F101 0101       ADD              R1, R1, #1  ; i++
+   78 00000058 E7DF            B                OUTER_LOOP
+   79 0000005A         
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   80 0000005A         SORT_DONE
+   81 0000005A E7FE    STOP    B                STOP        ; Infinite loop to 
+                                                            end execution
+   82 0000005C         
+   83 0000005C                 ALIGN
+   84 0000005C         SRC_ARRAY
+   85 0000005C 00000032 
+              00000007 
+              00000019 
+              00000002 
+              00000045         DCD              0x00000032, 0x00000007, 0x00000
+019, 0x00000002, 0x00000045
+   86 00000070 00000012 
+              00000001 
+              00000088 
+              00000023 
+              0000000F         DCD              0x00000012, 0x00000001, 0x00000
+088, 0x00000023, 0x0000000F
+   87 00000084         ; Decimal values: 50, 7, 25, 2, 69, 18, 1, 136, 35, 15
+   88 00000084         
+   89 00000084 00000000 
+              00000000 
+              00000000         AREA             mydata, DATA, READWRITE
+   90 00000000                 ALIGN
+   91 00000000         ; Array in RAM where sorting takes place
+   92 00000000 00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00       ARR_RAM SPACE            40          ; Reserve 40 bytes 
+                                                            (10 x 4-byte words)
+                                                            
+   93 00000028         
+   94 00000028                 END
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=lab_5_1.
+d -olab_5_1.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\
+Inc\NXP\LPC17xx --predefine="__EVAL SETA 1" --list=lab_5_1.lst lab_5_1.asm
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 5 in file lab_5_1.asm
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 8 in file lab_5_1.asm
+   Uses
+      At line 6 in file lab_5_1.asm
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+COPY_LOOP 00000008
+
+Symbol: COPY_LOOP
+   Definitions
+      At line 24 in file lab_5_1.asm
+   Uses
+      At line 28 in file lab_5_1.asm
+Comment: COPY_LOOP used once
+INNER_LOOP 00000024
+
+Symbol: INNER_LOOP
+   Definitions
+      At line 42 in file lab_5_1.asm
+   Uses
+      At line 60 in file lab_5_1.asm
+Comment: INNER_LOOP used once
+NEXT_INNER 0000003A
+
+Symbol: NEXT_INNER
+   Definitions
+      At line 58 in file lab_5_1.asm
+   Uses
+      At line 54 in file lab_5_1.asm
+Comment: NEXT_INNER used once
+NEXT_OUTER 00000054
+
+Symbol: NEXT_OUTER
+   Definitions
+      At line 76 in file lab_5_1.asm
+   Uses
+      At line 65 in file lab_5_1.asm
+Comment: NEXT_OUTER used once
+OUTER_LOOP 0000001A
+
+Symbol: OUTER_LOOP
+   Definitions
+      At line 34 in file lab_5_1.asm
+   Uses
+      At line 78 in file lab_5_1.asm
+Comment: OUTER_LOOP used once
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 18 in file lab_5_1.asm
+   Uses
+      At line 10 in file lab_5_1.asm
+      At line 16 in file lab_5_1.asm
+
+SORT_DONE 0000005A
+
+Symbol: SORT_DONE
+   Definitions
+      At line 80 in file lab_5_1.asm
+   Uses
+      At line 36 in file lab_5_1.asm
+Comment: SORT_DONE used once
+SRC_ARRAY 0000005C
+
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: SRC_ARRAY
+   Definitions
+      At line 84 in file lab_5_1.asm
+   Uses
+      At line 20 in file lab_5_1.asm
+Comment: SRC_ARRAY used once
+STOP 0000005A
+
+Symbol: STOP
+   Definitions
+      At line 81 in file lab_5_1.asm
+   Uses
+      At line 81 in file lab_5_1.asm
+Comment: STOP used once
+SWAP_STAGE 00000040
+
+Symbol: SWAP_STAGE
+   Definitions
+      At line 62 in file lab_5_1.asm
+   Uses
+      At line 44 in file lab_5_1.asm
+Comment: SWAP_STAGE used once
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 14 in file lab_5_1.asm
+   Uses
+      None
+Comment: mycode unused
+11 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+ARR_RAM 00000000
+
+Symbol: ARR_RAM
+   Definitions
+      At line 92 in file lab_5_1.asm
+   Uses
+      At line 21 in file lab_5_1.asm
+      At line 31 in file lab_5_1.asm
+
+mydata 00000000
+
+Symbol: mydata
+   Definitions
+      At line 89 in file lab_5_1.asm
+   Uses
+      None
+Comment: mydata unused
+2 symbols
+348 symbols in table

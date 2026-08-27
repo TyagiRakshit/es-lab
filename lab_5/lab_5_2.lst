@@ -1,0 +1,220 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; PROGRAM TO FIND THE FACTORIAL OF AN UNSIGNED NUMBER US
+                       ING RECURSION
+    2 00000000         
+    3 00000000                 AREA             RESET, DATA, READONLY
+    4 00000000                 EXPORT           __Vectors
+    5 00000000         
+    6 00000000         __Vectors
+    7 00000000 10001000        DCD              0x10001000  ; Initial Stack Poi
+                                                            nter (Top of SRAM)
+    8 00000004 00000000        DCD              Reset_Handler ; Reset vector po
+                                                            ints to Reset_Handl
+                                                            er
+    9 00000008         
+   10 00000008                 ALIGN
+   11 00000008         
+   12 00000008                 AREA             mycode, CODE, READONLY
+   13 00000000                 ENTRY
+   14 00000000                 EXPORT           Reset_Handler
+   15 00000000         
+   16 00000000         Reset_Handler
+   17 00000000         ; --- Load Input Number ---
+   18 00000000 480B            LDR              R0, =NUM    ; Pointer to input 
+                                                            number in Flash
+   19 00000002 6800            LDR              R0, [R0]    ; R0 = n (e.g., n =
+                                                             5)
+   20 00000004         
+   21 00000004         ; --- Call Recursive Function ---
+   22 00000004 F000 F803       BL               FACTORIAL   ; Branch with Link 
+                                                            to recursive functi
+                                                            on
+   23 00000008         ; R0 will hold the final result (5! = 120 = 0x78)
+   24 00000008         
+   25 00000008         ; --- Store Result in RAM ---
+   26 00000008 490A            LDR              R1, =RESULT ; Pointer to RESULT
+                                                             in SRAM
+   27 0000000A 6008            STR              R0, [R1]    ; Store n! into mem
+                                                            ory
+   28 0000000C         
+   29 0000000C E7FE    STOP    B                STOP        ; Infinite loop to 
+                                                            end program
+   30 0000000E         
+   31 0000000E         ; --- RECURSIVE FACTORIAL FUNCTION ---
+   32 0000000E         ; Input:  R0 = n
+   33 0000000E         ; Output: R0 = n!
+   34 0000000E         FACTORIAL
+   35 0000000E B510            PUSH             {R4, LR}    ; Save working regi
+                                                            ster R4 and Link Re
+                                                            gister (return addr
+                                                            ess)
+   36 00000010         
+   37 00000010 2801            CMP              R0, #1      ; Base Case: Check 
+                                                            if n <= 1
+   38 00000012 DD07            BLE              BASE_CASE   ; If n <= 1, jump t
+                                                            o base case
+   39 00000014         
+   40 00000014 4604            MOV              R4, R0      ; Save current valu
+                                                            e of 'n' in R4
+   41 00000016 F1A0 0001       SUB              R0, R0, #1  ; R0 = n - 1
+   42 0000001A F7FF FFF8       BL               FACTORIAL   ; Recursive Call: F
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                                                            ACTORIAL(n - 1)
+   43 0000001E         ; Upon return, R0 contains (n - 1)!
+   44 0000001E         
+   45 0000001E FB04 F000       MUL              R0, R4, R0  ; Combine step: R0 
+                                                            = n * (n - 1)!
+   46 00000022 E001            B                FACT_EXIT
+   47 00000024         
+   48 00000024         BASE_CASE
+   49 00000024 F04F 0001       MOV              R0, #1      ; Return 1 for 0! o
+                                                            r 1!
+   50 00000028         
+   51 00000028         FACT_EXIT
+   52 00000028 BD10            POP              {R4, PC}    ; Restore R4 and re
+                                                            turn from function 
+                                                            by popping LR into 
+                                                            PC
+   53 0000002A         
+   54 0000002A 00 00           ALIGN
+   55 0000002C         ; Input number in CODE Segment
+   56 0000002C 00000005 
+                       NUM     DCD              5           ; Compute 5! (5 * 4
+                                                             * 3 * 2 * 1 = 120)
+                                                            
+   57 00000030         
+   58 00000030 00000000 
+              00000000         AREA             mydata, DATA, READWRITE
+   59 00000000                 ALIGN
+   60 00000000         ; Output location in SRAM (0x10000000)
+   61 00000000 00000000 
+                       RESULT  DCD              0           ; Space to store th
+                                                            e result (120 -> 0x
+                                                            00000078)
+   62 00000004         
+   63 00000004                 END
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=lab_5_2.
+d -olab_5_2.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\
+Inc\NXP\LPC17xx --predefine="__EVAL SETA 1" --list=lab_5_2.lst lab_5_2.asm
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 3 in file lab_5_2.asm
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 6 in file lab_5_2.asm
+   Uses
+      At line 4 in file lab_5_2.asm
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+BASE_CASE 00000024
+
+Symbol: BASE_CASE
+   Definitions
+      At line 48 in file lab_5_2.asm
+   Uses
+      At line 38 in file lab_5_2.asm
+Comment: BASE_CASE used once
+FACTORIAL 0000000E
+
+Symbol: FACTORIAL
+   Definitions
+      At line 34 in file lab_5_2.asm
+   Uses
+      At line 22 in file lab_5_2.asm
+      At line 42 in file lab_5_2.asm
+
+FACT_EXIT 00000028
+
+Symbol: FACT_EXIT
+   Definitions
+      At line 51 in file lab_5_2.asm
+   Uses
+      At line 46 in file lab_5_2.asm
+Comment: FACT_EXIT used once
+NUM 0000002C
+
+Symbol: NUM
+   Definitions
+      At line 56 in file lab_5_2.asm
+   Uses
+      At line 18 in file lab_5_2.asm
+Comment: NUM used once
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 16 in file lab_5_2.asm
+   Uses
+      At line 8 in file lab_5_2.asm
+      At line 14 in file lab_5_2.asm
+
+STOP 0000000C
+
+Symbol: STOP
+   Definitions
+      At line 29 in file lab_5_2.asm
+   Uses
+      At line 29 in file lab_5_2.asm
+Comment: STOP used once
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 12 in file lab_5_2.asm
+   Uses
+      None
+Comment: mycode unused
+7 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESULT 00000000
+
+Symbol: RESULT
+   Definitions
+      At line 61 in file lab_5_2.asm
+   Uses
+      At line 26 in file lab_5_2.asm
+Comment: RESULT used once
+mydata 00000000
+
+Symbol: mydata
+   Definitions
+      At line 58 in file lab_5_2.asm
+   Uses
+      None
+Comment: mydata unused
+2 symbols
+344 symbols in table
