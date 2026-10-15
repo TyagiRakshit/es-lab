@@ -6,9 +6,10 @@ unsigned char seg[10] =
 unsigned int mask[4] =
 {0xF87FFFFF,0xF8FFFFFF,0xF97FFFFF,0xF9FFFFFF};
 
-unsigned int num=0, n, i, j, k;
+unsigned int num=0, n, i, k;
+volatile unsigned int j;
 
-int main()
+int main(void)
 {
     SystemInit();
     SystemCoreClockUpdate();
@@ -29,12 +30,14 @@ int main()
 
             for(i=0;i<4;i++)
             {
-                LPC_GPIO1->FIOPIN = mask[i];
+                // Disable digits before changing segments
+                LPC_GPIO1->FIOPIN = 0xFA7FFFFF;
+
                 LPC_GPIO0->FIOPIN = seg[n%10]<<4;
+                LPC_GPIO1->FIOPIN = mask[i];
 
                 for(j=0;j<1000;j++);
 
-                LPC_GPIO0->FIOCLR = 0xFF0;
                 n=n/10;
             }
         }
