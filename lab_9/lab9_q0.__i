@@ -1,0 +1,5 @@
+-c --cpu Cortex-M3 -D__EVAL -g -O0 --apcs=interwork 
+-I C:\Keil\ARM\RV31\INC 
+-I C:\Keil\ARM\CMSIS\Include 
+-I C:\Keil\ARM\Inc\NXP\LPC17xx 
+-o "lab9_q0.o" --omf_browse "lab9_q0.crf" --depend "lab9_q0.d" "lab9_q0.c"
